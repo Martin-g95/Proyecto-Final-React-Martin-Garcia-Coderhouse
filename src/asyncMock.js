@@ -32,6 +32,8 @@ const productos = [
     
   ];
 
+
+  //firebase
 export const getProducts = new Promise((resolve) => {
     setTimeout(() => {
       resolve(productos);
