@@ -7,5 +7,4 @@ const ButtonComponent = ({category,estiloBoton}) => {
     </button>
   )
 }
-
 export default ButtonComponent;
