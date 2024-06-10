@@ -1,27 +1,35 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { CartContext } from '../cart/CartContext';
+import { Link } from 'react-router-dom';
+
 
 const Cart = () => {
-    const { cart, removeFromCart } = useContext(CartContext);
+    const { cart, removeFromCart, clearCart } = useContext(CartContext);
 
+    //Todos los productos que agreguemos al carrito, estaran en el LocalStorage
+    useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }, [cart]);
+
+    //Funcion que remueve el producto por ID
     const handleRemove = (productId) => {
         removeFromCart(productId);
     };
 
-     // Calcula el subtotal
-     const subtotal = cart.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-     // Si tienes impuestos o costos de envío, agrégalos aquí
-     const impuestos = subtotal * 0.10; // Ejemplo: 10% de impuestos
-     const envio = 5.00; // Ejemplo: costo de envío fijo
-     const total = subtotal + impuestos + envio;
+    //Calculo de los productos
+    const subtotal = cart.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+    const impuestos = subtotal * 0.05;
+    const envio = 5.00; 
+    const total = subtotal + impuestos + envio;
+
 
 
     return (
         <>
-        <div className="bg-gray-100 h-screen py-8">
+        <section>
+        <div className="h-screen py-8">
             <div className="container mx-auto px-4">
                 <h1 className="text-2xl font-semibold mb-4">Tus objetos!</h1>
-                
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="md:w-3/4">
                         <div className="bg-white rounded-lg shadow-md p-6 mb-4">
@@ -29,36 +37,48 @@ const Cart = () => {
                                 <thead>
                                     <tr>
                                         <th className="text-left font-semibold">Producto</th>
-                                        <th className="text-left font-semibold">Precio</th>
+                                        <th className="text-left font-semibold">Precio Unitario</th>
+                                        <th className="text-left font-semibold">Precio Cantidad</th>
                                         <th className="text-left font-semibold">Cantidad</th>
-                                        <th className="text-left font-semibold">Acciones</th>
+                                        <th className="text-left font-semibold"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {cart.map((item, index) => (
-                                        <tr key={index}>
-                                            <td className="py-4">
-                                                <div className="flex items-center">
-                                                    <img className="h-16 w-16 mr-4" src={item.imagen} alt={item.nombre} />
-                                                    <span className="font-semibold">{item.nombre}</span>
-                                                </div>
-                                            </td>
-                                            <td className="py-4">{item.precio}</td>
-                                            <td className="py-4">{item.cantidad}</td>
-                                            <td className="py-4">
-                                                <button 
-                                                    onClick={() => handleRemove(item.id)} 
-                                                    className='bg-black text-white rounded-md py-2 px-4'>
-                                                    X
-                                                </button>
-                                            </td>
-                                        </tr>
+                                {cart.map((item, index) => (
+                                    <tr key={index}>
+                                        <td className="py-4">
+                                        <div className="flex items-center">
+                                            <img className="h-16 w-16 mr-4" src={item.imagen} alt={item.nombre} />
+                                            <span className="font-semibold">{item.nombre}</span>
+                                        </div>
+                                        </td>
+                                        <td className="py-4">{item.precio}</td> 
+                                        <td className="py-4">{item.precio * item.cantidad}</td> 
+                                        <td className="py-4">{item.cantidad}</td>
+                                        <td className="py-4">
+                                        <button 
+                                            onClick={() => handleRemove(item.id)} 
+                                            className='bg-white text-white rounded-md py-2 px-4'>
+                                            <img className="h-5 w-5 w-16 mr-4" src="https://img.icons8.com/?size=100&id=1941&format=png&color=F90202" />
+                                        </button>
+                                        </td>
+                                    </tr>
                                     ))}
                                 </tbody>
                             </table>
+
+                                        {/* Aqui generamos el boton de limpiar todo el carrito, cuando haya productos, si no, desaparece.*/}
+                            {cart.length > 0 && (
+                                <button 
+                                    onClick={clearCart} 
+                                    className='bg-red-500 text-white rounded-md py-2 px-4 mt-4'>
+                                    Vaciar carrito
+                                </button>
+                            )}
                         </div>
                     </div>
 
+                            {/* Estuve leyendo que en los ecommerce se utiliza el toFixed para representar el dinero en dos decimales.*/}
                     <div className="md:w-1/4">
                 <div className="bg-white rounded-lg shadow-md p-6">
                     <h2 className="text-lg font-semibold mb-4">Tu compra</h2>
@@ -78,13 +98,16 @@ const Cart = () => {
                     <div className="flex justify-between mb-2">
                         <span className="font-semibold">Total</span>
                         <span className="font-semibold">${total.toFixed(2)}</span>
-                    </div>
-                    <button className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Comprar</button>
-                </div>
+                        </div>
+                            <Link to={`/checkout`}> 
+                            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Comprar</button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
         </>
     );
     

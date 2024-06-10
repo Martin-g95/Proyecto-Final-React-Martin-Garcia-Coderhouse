@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Logo from "../../assets/navBarLogo.jpeg";
 import ButtonComponent from '../StoreView/ButtonComponent';
 import { Link } from 'react-router-dom';
+import CartWidget from './CartWidget';
+
+
 const NavBar = () => {
   return (
     <>
@@ -20,12 +23,7 @@ const NavBar = () => {
             </ul>
           </div>
           <div className="order-2 md:order-3">
-            <button className="px-4 py-2 bg-zinc-600 hover:bg-zinc-800 text-gray-50 rounded-full flex items-center gap-2">
-              <svg className="h-8 w-8 text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              5
-            </button>
+            <CartWidget/>
           </div>
         </div>
       </nav>
