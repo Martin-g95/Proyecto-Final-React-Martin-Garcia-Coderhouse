@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { CartContext } from '../cart/CartContext';
-import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 
 const Cart = () => {
@@ -22,7 +23,14 @@ const Cart = () => {
     const envio = 5.00; 
     const total = subtotal + impuestos + envio;
 
+    //Funcion en dondew se usa un hook de ReactRouterDom, en donde si no hay productos en el carrito, muestre un error, y si el carrito tiene productos, me envie al checkout
+    const navigate = useNavigate();
 
+    const handleCheckout = () => {
+        cart.length === 0 
+            ? toast.error('No tienes productos en el carrito, compra algo') 
+            : navigate('/checkout');
+    };
 
     return (
         <>
@@ -99,9 +107,10 @@ const Cart = () => {
                         <span className="font-semibold">Total</span>
                         <span className="font-semibold">${total.toFixed(2)}</span>
                         </div>
-                            <Link to={`/checkout`}> 
-                            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Comprar</button>
-                            </Link>
+
+                        <button onClick={handleCheckout} className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Comprar</button>
+
+
                         </div>
                     </div>
                 </div>
